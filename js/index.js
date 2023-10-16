@@ -81,6 +81,8 @@ filterButton.addEventListener("click", () => {
     filterButton.textContent = "Afficher les filtres";
   }
 });
+
+//Les fonctions FILTRES
 function filterByExtraverted() {
             const personCardsDiv = document.getElementById("personCards");
             const personCards = personCardsDiv.getElementsByClassName("person-card");
@@ -129,6 +131,8 @@ function filterByExtraverted() {
             }
         }
 
+
+//Fonction D3
 function createPieChart(percentage, percentageRemaining, namePercentage, nameRemaining, colorPercentage, colorRemaining) {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("class", "chart");
