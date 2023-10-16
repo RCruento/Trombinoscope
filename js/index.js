@@ -1,78 +1,61 @@
 (async () => {
-    //Lecture des données du fichier CSV
-     try {
-        //a tester le nouveau lien
-    const target = `https://docs.google.com/spreadsheets/d/e/2PACX-1vT3xEKGlgo2wX4qD2Y5WNNKUFfvGcbhmSelXz-80HAsuFsri6AFf71m09TRgAOQcHr0yk_09shV1Jd7/pub?output=csv`;
-    const data = await d3.csv(target);
-        console.log("Data:", data);
-    });
-    //Extraction des données du CSV
-    if (data) {
-        const personCardsDiv = document.getElementById("personCards");
-        const searchInput = document.getElementById("searchInput");
-        //ajout des élements dans la barre de recherche
-        searchInput.addEventListener("input", () => {
-            const searchValue = searchInput.value.toLowerCase();
-            personCardsDiv.innerHTML = "<h2>Personnes :</h2>";
-            
+    try {
+
+        const data = await d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vT3xEKGlgo2wX4qD2Y5WNNKUFfvGcbhmSelXz-80HAsuFsri6AFf71m09TRgAOQcHr0yk_09shV1Jd7/pub?output=csv");
+        
+        if (data) {
+            const personCardsDiv = document.getElementById("personCards");
             data.forEach((row) => {
-                const name = row[1].toLowerCase(); // Utilisez l'indice 1 pour la colonne du nom
-                const surname = row[2].toLowerCase(); // Utilisez l'indice 2 pour la colonne du prénom
-            
-                if (name.includes(searchValue) || surname.includes(searchValue)) {
-                    const imageUrl = row[3]; // Utilisez l'indice 3 pour la colonne de l'image
-                    const personCard = document.createElement("div");
-                    personCard.className = "person-card";
-                    const profilePicElement = document.createElement("img");
-                    profilePicElement.src = imageUrl;
-                    profilePicElement.alt = "Photo de profil";
-                    const infoDiv = document.createElement("div");
-                    infoDiv.className = "info";
-                    const nameElement = document.createElement("h3");
-                    nameElement.innerText = `${name} ${surname}`;
-                    personCard.appendChild(profilePicElement);
-                    infoDiv.appendChild(nameElement);
-                    personCard.appendChild(infoDiv);
-            
-                    // Le reste de votre code pour les graphiques camemberts
-                    // ...
-            
-                    personCardsDiv.appendChild(personCard);
-                }
-            });
-            
-        });
-        for (let i = 1; i < rows.length; i++) {
-            const cells = rows[i].split(",");
-            if (cells.length > 0) {
-                const name = cells[1];
-                const surname = cells[2];
-                const imageUrl = cells[3];
+                const nom = row.Nom;
+                const prenom = row.Prénom;
+                const imageUrl= row.Image;
                 const imageUrl2 = imageUrl.split("id=")[1];
                 const personCard = document.createElement("div");
-                personCard.className = "person-card";
-                const profilePicElement = document.createElement("img");
-                profilePicElement.src = " https://drive.google.com/uc?export=view&id="+imageUrl2;
-                profilePicElement.alt = "Photo de profil";
+                personCard.className="persson-card";
+                const ImgProfile = document.createElement("img");
+                ImgProfile.src = "https://drive.google.com/uc?export=view&id=" + imageUrl2;
+                ImgProfile.alt = "Photo de profil";
                 const infoDiv = document.createElement("div");
                 infoDiv.className = "info";
                 const nameElement = document.createElement("h3");
-                nameElement.innerText = `${name} ${surname}`;
-                personCard.appendChild(profilePicElement);
+                nameElement.innerText = `${nom} ${prenom}`;
+                personCard.appendChild(ImgProfile);
                 infoDiv.appendChild(nameElement);
                 personCard.appendChild(infoDiv);
-                const extravertiData = cells.slice(4, 9);
-                const stresseData = cells.slice(9, 14);
-                const relationnelData = cells.slice(14, 19);
-                personCardsDiv.appendChild(personCard);
+                //extravertie
+                const E1 = row.E1;
+                const E2 = row.E2;
+                const E3 = row.E3;
+                const E4 = row.E4;
+                const E5 = row.E5;
+                //stresse
+                const S1 = row.S1;
+                const S2 = row.S2;
+                const S3 = row.S3;
+                const S4 = row.S4;
+                const S5 = row.S5;
+                //Emo
+                const R1 = row.R1;
+                const R2 = row.R2;
+                const R3 = row.R3;
+                const R4 = row.R4;
+                const R5 = row.R5;
+                //Tableau
+                    //extra 
+                const tabE = [E1, E2, E3, E4, E5];
+                    //Stresse
+                const tabS = [S1, S2, S3, S4, S5];
+                    //Rela
+                const tabR = [R1, R2, R3, R4, R5];
+    
                 const chartContainer = document.createElement("div");
                 chartContainer.className = "chart-container";
-                const extravertiTotal = extravertiData.reduce((acc, value) => acc + (parseInt(value) - 1), 0);
-                const stresseTotal = stresseData.reduce((acc, value) => acc + (parseInt(value) - 1), 0);
-                const relationnelTotal = relationnelData.reduce((acc, value) => acc + (parseInt(value) - 1), 0);
-                const extravertiPercentage = (extravertiTotal / (extravertiData.length * 4)) * 100;
-                const stressePercentage = (stresseTotal / (stresseData.length * 4)) * 100;
-                const relationnelPercentage = (relationnelTotal / (relationnelData.length * 4)) * 100;
+                const extravertiTotal = tabE.reduce((acc, value) => acc + (parseInt(value) - 1), 0);
+                const extravertiPercentage = (extravertiTotal / (tabE.length * 4)) * 100;
+                const stresseTotal = tabS.reduce((acc, value) => acc + (parseInt(value) - 1), 0);
+                const relationnelTotal = tabR.reduce((acc, value) => acc + (parseInt(value) - 1), 0);
+                const stressePercentage = (stresseTotal / (tabS.length * 4)) * 100;
+                const relationnelPercentage = (relationnelTotal / (tabR.length * 4)) * 100;
                 const extravertiChart = createPieChart(extravertiPercentage, 100 - extravertiPercentage, "Extraverti", "Introverti", "green", "lightgray");
                 chartContainer.appendChild(extravertiChart);
                 const stresseChart = createPieChart(stressePercentage, 100 - stressePercentage, "Calme", "Stressé", "blue", "lightgray");
@@ -80,17 +63,16 @@
                 const relationnelChart = createPieChart(relationnelPercentage, 100 - relationnelPercentage, "Rationnel", "Emotionnel", "red", "lightgray");
                 chartContainer.appendChild(relationnelChart);
                 personCard.appendChild(chartContainer);
-            }
+            });
+            
+        } else {
+            console.log(`Erreur de requête ${res.status}`);
         }
-    } else {
-        console.log(`Code d'erreur ${res.status}`);
-    }
     } catch (err) {
-         console.log(err);
+        console.log(err);
     }
 })();
 
-//Cration gaphieque des camemberts
 function createPieChart(percentage, percentageRemaining, namePercentage, nameRemaining, colorPercentage, colorRemaining) {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("class", "chart");

@@ -64,3 +64,19 @@ h1 {
     width: 100%;
     height: 180px;
 }
+/* Ajoutez ces styles pour personnaliser les boutons */
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
