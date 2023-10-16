@@ -9,6 +9,76 @@
                 const nom = row.Nom;
                 const prenom = row.Prénom;
                 const imageUrl= row.Image;
+
+    //Lecture des données du fichier CSV
+     try {
+        //a tester le nouveau lien
+    const target = `https://docs.google.com/spreadsheets/d/e/2PACX-1vT3xEKGlgo2wX4qD2Y5WNNKUFfvGcbhmSelXz-80HAsuFsri6AFf71m09TRgAOQcHr0yk_09shV1Jd7/pub?output=csv`;
+    const res = await fetch(target, {
+        method: 'get',
+        headers: {
+            'content-type': 'text/csv;charset=UTF-8',
+        }
+    });
+    //Extraction des données du CSV
+    if (res.status === 200) {
+        const data = await res.text();
+        const rows = data.split("\n");
+        const personCardsDiv = document.getElementById("personCards");
+        const searchInput = document.getElementById("searchInput");
+        searchInput.addEventListener("input", () => {
+            const searchValue = searchInput.value.toLowerCase();
+            personCardsDiv.innerHTML = "<h2>Personnes :</h2>"; 
+            for (let i = 1; i < rows.length; i++) {
+                const cells = rows[i].split(",");
+                if (cells.length > 0) {
+                    const name = cells[1].toLowerCase();
+                    const surname = cells[2].toLowerCase();
+                    if (name.includes(searchValue) || surname.includes(searchValue)) {
+                        const imageUrl = cells[3];
+                        const personCard = document.createElement("div");
+                        personCard.className = "person-card";
+                        const profilePicElement = document.createElement("img");
+                        profilePicElement.src = imageUrl;
+                        profilePicElement.alt = "Photo de profil";
+                        const infoDiv = document.createElement("div");
+                        infoDiv.className = "info";
+                        const nameElement = document.createElement("h3");
+                        nameElement.innerText = `${name} ${surname}`;
+                        personCard.appendChild(profilePicElement);
+                        infoDiv.appendChild(nameElement);
+                        personCard.appendChild(infoDiv);
+                        const extravertiData = cells.slice(4, 9);
+                        const stresseData = cells.slice(9, 14);
+                        const relationnelData = cells.slice(14, 19);
+                        personCardsDiv.appendChild(personCard);
+                        const chartContainer = document.createElement("div");
+                        chartContainer.className = "chart-container";
+                        //Clacule % de chaque tableau
+                        const extravertiTotal = extravertiData.reduce((acc, value) => acc + (parseInt(value) - 1), 0);
+                        const stresseTotal = stresseData.reduce((acc, value) => acc + (parseInt(value) - 1), 0);
+                        const relationnelTotal = relationnelData.reduce((acc, value) => acc + (parseInt(value) - 1), 0);
+                        const extravertiPercentage = (extravertiTotal / (extravertiData.length * 4)) * 100;
+                        const stressePercentage = (stresseTotal / (stresseData.length * 4)) * 100;
+                        const relationnelPercentage = (relationnelTotal / (relationnelData.length * 4)) * 100;
+                        //Calule du reste %
+                        const extravertiChart = createPieChart(extravertiPercentage, 100 - extravertiPercentage, "Extraverti", "Introverti", "green", "lightgray");
+                        chartContainer.appendChild(extravertiChart);
+                        const stresseChart = createPieChart(stressePercentage, 100 - stressePercentage, "Calme", "Stressé", "blue", "lightgray");
+                        chartContainer.appendChild(stresseChart);
+                        const relationnelChart = createPieChart(relationnelPercentage, 100 - relationnelPercentage, "Rationnel", "Emotionnel", "red", "lightgray");
+                        chartContainer.appendChild(relationnelChart);
+                        personCard.appendChild(chartContainer);
+                    }
+                }
+            }
+        });
+        for (let i = 1; i < rows.length; i++) {
+            const cells = rows[i].split(",");
+            if (cells.length > 0) {
+                const name = cells[1];
+                const surname = cells[2];
+                const imageUrl = cells[3];
                 const imageUrl2 = imageUrl.split("id=")[1];
                 const personCard = document.createElement("div");
                 personCard.className="persson-card";
