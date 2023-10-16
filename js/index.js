@@ -99,7 +99,7 @@ function filterByExtraverted() {
             }
         }
 
-        function filterByCalm() {
+function filterByCalm() {
             const personCardsDiv = document.getElementById("personCards");
             const personCards = personCardsDiv.getElementsByClassName("person-card");
 
@@ -115,7 +115,7 @@ function filterByExtraverted() {
             }
         }
 
-        function filterByRelational() {
+function filterByRationnel() {
             const personCardsDiv = document.getElementById("personCards");
             const personCards = personCardsDiv.getElementsByClassName("person-card");
 
